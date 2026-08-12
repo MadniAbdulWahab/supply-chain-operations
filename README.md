@@ -135,6 +135,6 @@ More detail is available in the [architecture](docs/architecture.md),
 ## Current limitations
 
 - Fabric notebooks and the Data Factory pipeline have not been executed in a Fabric workspace.
-- GitHub Actions will be verified after the first push.
+- GitHub Actions passes the local-lakehouse CI checks on `main`.
 - The local pipeline rebuilds silver and gold from the current bronze snapshot instead of
   incrementally merging every downstream table.

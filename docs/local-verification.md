@@ -42,7 +42,7 @@ same-path batch reprocessing. End-to-end pipeline tests also execute
 
 ## Checks outside the local pipeline
 
-- GitHub Actions has not run because the repository has not been pushed yet.
+- GitHub Actions completed successfully on `main` after the repository was pushed.
 - Fabric items have not been created or executed.
 - The Power BI local model refreshed successfully. Shipments, deliveries, on-time rate,
   positive-delay average, P90 transit, exception shipments, events, late arrivals, and

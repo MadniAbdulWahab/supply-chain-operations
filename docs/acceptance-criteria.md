@@ -18,7 +18,7 @@ environment.
 - [x] Python and SQL tests pass locally.
 - [x] The full run writes a machine-readable summary under `data/evidence/`.
 - [x] Architecture, table grain, quality rules, KPIs, and setup are documented.
-- [ ] GitHub Actions passes on the remote repository.
+- [x] GitHub Actions passes on the remote repository.
 
 ## Microsoft Fabric
 
