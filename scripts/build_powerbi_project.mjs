@@ -32,6 +32,8 @@ const pageId = (name) => `ReportSection${stableHex(`page:${name}`, 24)}`;
 const visualId = (page, name) => stableHex(`visual:${page}:${name}`, 20);
 const mString = (value) => `"${value.replaceAll('"', '""')}"`;
 const tmdlName = (value) => (/^[A-Za-z_][A-Za-z0-9_]*$/.test(value) ? value : `'${value}'`);
+const mType = (type) =>
+  ({ string: "type text", int64: "Int64.Type", double: "type number", dateTime: "type datetime", boolean: "type logical" })[type];
 
 const databaseId = stableUuid(`database:${projectName}`);
 const tableSpecs = [
@@ -146,6 +148,13 @@ const tableTmdl = (spec) => {
     dataRoot === "__DATA_ROOT__"
       ? `#\"pDataRoot\" & \"\\${spec.file}\"`
       : mString(path.resolve(dataRoot, spec.file));
+  const emptyTableExpression = `#table(type table [${spec.columns
+    .map(([name, type]) => `${name} = ${mType(type)}`)
+    .join(", ")}], {})`;
+  const sourceExpression =
+    dataRoot === "__DATA_ROOT__"
+      ? `if #\"pDataRoot\" = \"__DATA_ROOT__\" then ${emptyTableExpression} else Parquet.Document(File.Contents(${fileExpression}))`
+      : `Parquet.Document(File.Contents(${fileExpression}))`;
   const lines = [`table ${tmdlName(spec.name)}`];
   if (spec.dataCategory) lines.push(`\tdataCategory: ${spec.dataCategory}`);
   for (const [name, type, options] of spec.columns) {
@@ -163,7 +172,7 @@ const tableTmdl = (spec) => {
     "\t\tmode: import",
     "\t\tsource =",
     "\t\t\tlet",
-    `\t\t\t\tSource = Parquet.Document(File.Contents(${fileExpression}))`,
+    `\t\t\t\tSource = ${sourceExpression}`,
     "\t\t\tin",
     "\t\t\t\tSource",
     "",
@@ -221,8 +230,8 @@ const measuresTmdl = `table _Measures
 	measure 'Quarantined Records' = SUM(fact_data_quality[failed_record_count])
 		formatString: #,##0
 
-	/// Sum of affected file counts across failed rules
-	measure 'Affected Source Files' = SUM(fact_data_quality[affected_file_count])
+	/// Sum of rule and source-file combinations affected by quality failures
+	measure 'Rule-File Impacts' = SUM(fact_data_quality[affected_file_count])
 		formatString: #,##0
 
 	/// Valid rows as a share of valid plus quarantined rows
@@ -373,6 +382,20 @@ const literal = (value, kind = "string") => {
   if (kind === "number") return { expr: { Literal: { Value: `${value}D` } } };
   return { expr: { Literal: { Value: `'${String(value).replaceAll("'", "''")}'` } } };
 };
+const solidColor = (color) => ({ solid: { color: literal(color) } });
+const colors = {
+  canvas: "#FFFFFF",
+  header: "#D9D9D9",
+  headerShade: "#C6C6C6",
+  ink: "#242424",
+  mutedInk: "#595959",
+  border: "#666666",
+  panelBorder: "#A6A6A6",
+  cardAlt: "#E2E2E2",
+  cardBase: "#FFFFFF",
+  blue: "#168AF4",
+  darkBlue: "#1726A3",
+};
 const measureField = (property) => ({
   Measure: { Expression: { SourceRef: { Entity: "_Measures" } }, Property: property },
 });
@@ -380,28 +403,188 @@ const columnField = (entity, property) => ({
   Column: { Expression: { SourceRef: { Entity: entity } }, Property: property },
 });
 const projection = (field, queryRef, nativeQueryRef) => ({ field, queryRef, nativeQueryRef });
-const titleObjects = (title, altText) => ({
+const titleObjects = (title, altText, type, cardBackground) => ({
   title: [
     {
       properties: {
         show: literal(true, "bool"),
         text: literal(title),
-        fontSize: literal(12, "number"),
+        fontSize: literal(type === "cardVisual" ? 11 : 12, "number"),
         bold: literal(true, "bool"),
+        fontColor: solidColor(colors.ink),
       },
     },
   ],
   general: [{ properties: { altText: literal(altText ?? title) } }],
+  background: [
+    {
+      properties: {
+        show: literal(true, "bool"),
+        color: solidColor(type === "cardVisual" ? cardBackground : colors.canvas),
+        transparency: literal(0, "number"),
+      },
+    },
+  ],
+  border: [
+    {
+      properties: {
+        show: literal(true, "bool"),
+        color: solidColor(type === "cardVisual" ? colors.border : colors.panelBorder),
+        width: literal(1, "number"),
+        radius: literal(0, "number"),
+      },
+    },
+  ],
+  padding: [
+    {
+      properties: {
+        top: literal(4, "number"),
+        bottom: literal(4, "number"),
+        left: literal(4, "number"),
+        right: literal(4, "number"),
+      },
+    },
+  ],
+  visualHeader: [{ properties: { show: literal(false, "bool") } }],
 });
-const makeVisual = (pageName, name, type, title, position, roles, altText) => ({
+const makeVisual = (
+  pageName,
+  name,
+  type,
+  title,
+  position,
+  roles,
+  altText,
+  objects = {},
+  cardBackground = colors.cardBase,
+) => {
+  const visualObjects = { ...objects };
+  if (type === "cardVisual") {
+    visualObjects.label = [
+      { properties: { show: literal(false, "bool") }, selector: { id: "default" } },
+    ];
+    visualObjects.value = [
+      {
+        properties: {
+          labelDisplayUnits: literal(1, "number"),
+          fontSize: literal(32, "number"),
+          fontFamily: literal("Segoe UI"),
+          fontColor: solidColor(colors.ink),
+        },
+        selector: { id: "default" },
+      },
+    ];
+    visualObjects.fillCustom = [
+      {
+        properties: {
+          show: literal(true, "bool"),
+          fillColor: solidColor(cardBackground),
+          transparency: literal(0, "number"),
+        },
+        selector: { id: "default" },
+      },
+    ];
+    visualObjects.outline = [
+      {
+        properties: {
+          show: literal(true, "bool"),
+          lineColor: solidColor(colors.border),
+          weight: literal(1, "number"),
+          transparency: literal(0, "number"),
+        },
+        selector: { id: "default" },
+      },
+    ];
+  }
+  return {
+    $schema:
+      "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+    name: visualId(pageName, name),
+    position: { ...position, z: position.tabOrder, tabOrder: position.tabOrder },
+    visual: {
+      visualType: type,
+      query: { queryState: roles },
+      visualContainerObjects: titleObjects(title, altText, type, cardBackground),
+      ...(Object.keys(visualObjects).length > 0 ? { objects: visualObjects } : {}),
+    },
+  };
+};
+const chromeObjects = {
+  background: [{ properties: { show: literal(false, "bool") } }],
+  border: [{ properties: { show: literal(false, "bool") } }],
+  padding: [
+    {
+      properties: {
+        top: literal(0, "number"),
+        bottom: literal(0, "number"),
+        left: literal(0, "number"),
+        right: literal(0, "number"),
+      },
+    },
+  ],
+};
+const makeShape = (pageName, name, position, fill, outline = fill) => ({
   $schema:
     "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   name: visualId(pageName, name),
   position: { ...position, z: position.tabOrder, tabOrder: position.tabOrder },
   visual: {
-    visualType: type,
-    query: { queryState: roles },
-    visualContainerObjects: titleObjects(title, altText),
+    visualType: "shape",
+    objects: {
+      shape: [{ properties: { tileShape: literal("rectangle") } }],
+      fill: [
+        {
+          properties: { fillColor: solidColor(fill), transparency: literal(0, "number") },
+          selector: { id: "default" },
+        },
+      ],
+      outline: [
+        {
+          properties: {
+            show: literal(true, "bool"),
+            lineColor: solidColor(outline),
+            weight: literal(1, "number"),
+            transparency: literal(0, "number"),
+          },
+          selector: { id: "default" },
+        },
+      ],
+    },
+    visualContainerObjects: chromeObjects,
+  },
+});
+const makeTextbox = (pageName, name, position, value, fontSize, color, bold = false) => ({
+  $schema:
+    "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  name: visualId(pageName, name),
+  position: { ...position, z: position.tabOrder, tabOrder: position.tabOrder },
+  visual: {
+    visualType: "textbox",
+    objects: {
+      general: [
+        {
+          properties: {
+            paragraphs: [
+              {
+                textRuns: [
+                  {
+                    value,
+                    textStyle: {
+                      fontFamily: "Segoe UI",
+                      fontSize: `${fontSize}px`,
+                      color,
+                      ...(bold ? { fontWeight: "bold" } : {}),
+                    },
+                  },
+                ],
+                horizontalTextAlignment: "left",
+              },
+            ],
+          },
+        },
+      ],
+    },
+    visualContainerObjects: chromeObjects,
   },
 });
 const measureProjection = (name) => projection(measureField(name), `_Measures.${name}`, name);
@@ -411,15 +594,18 @@ const columnProjection = (table, name) =>
 const pages = [
   {
     name: "Executive Overview",
+    title: "Executive Overview",
+    subtitle: "Network delivery performance, service reliability, and route-level exceptions",
     visuals: [
       ["shipments_card", "cardVisual", "Shipments", [20, 20, 232, 105], { Data: [measureProjection("Shipments")] }],
       ["delivered_card", "cardVisual", "Delivered Shipments", [272, 20, 232, 105], { Data: [measureProjection("Delivered Shipments")] }],
       ["ontime_card", "cardVisual", "On-Time Delivery %", [524, 20, 232, 105], { Data: [measureProjection("On-Time Delivery %")] }],
       ["delay_card", "cardVisual", "Average Delay Hours", [776, 20, 232, 105], { Data: [measureProjection("Average Delay Hours")] }],
       ["p90_card", "cardVisual", "P90 Transit Hours", [1028, 20, 232, 105], { Data: [measureProjection("P90 Transit Hours")] }],
-      ["weekly_line", "lineChart", "Created-date delivery performance", [20, 145, 780, 260], {
+      ["weekly_line", "lineChart", "On-time delivery trend by created date", [20, 145, 780, 260], {
         Category: [columnProjection("dim_date", "calendar_date")],
-        Y: [measureProjection("On-Time Delivery %"), measureProjection("Shipments")],
+        Y: [measureProjection("On-Time Delivery %")],
+        Tooltips: [measureProjection("Shipments"), measureProjection("Late Shipments")],
       }],
       ["service_chart", "clusteredColumnChart", "On-time rate by service level", [820, 145, 440, 260], {
         Category: [columnProjection("dim_service_level", "service_level_name")],
@@ -441,11 +627,15 @@ const pages = [
   },
   {
     name: "Hub Route Performance",
+    title: "Hub & Route Performance",
+    subtitle: "Route, hub, event-latency, and operational exception analysis",
     visuals: [
       ["events_card", "cardVisual", "Valid Events", [20, 20, 260, 105], { Data: [measureProjection("Events")] }],
       ["late_arrival_card", "cardVisual", "Late-Arriving Event %", [300, 20, 260, 105], { Data: [measureProjection("Late-Arriving Event %")] }],
       ["exception_card", "cardVisual", "Exception Shipments", [580, 20, 260, 105], { Data: [measureProjection("Exception Shipments")] }],
-      ["route_slicer", "listSlicer", "Route", [860, 20, 400, 105], { Values: [columnProjection("dim_route", "route_label")] }],
+      ["route_slicer", "slicer", "Route", [860, 20, 400, 105], { Values: [columnProjection("dim_route", "route_label")] }, {
+        data: [{ properties: { mode: literal("Dropdown") } }],
+      }],
       ["route_matrix", "pivotTable", "Route performance detail", [20, 145, 750, 545], {
         Rows: [columnProjection("dim_route", "route_label")],
         Values: [
@@ -456,39 +646,42 @@ const pages = [
           measureProjection("Late Shipments"),
         ],
       }],
-      ["hub_bar", "clusteredBarChart", "Late-arriving events by hub", [790, 145, 470, 260], {
+      ["hub_bar", "clusteredBarChart", "Late-arriving events by hub", [790, 145, 470, 300], {
         Category: [columnProjection("dim_hub", "hub_name")],
         Y: [measureProjection("Late-Arriving Events")],
         Tooltips: [measureProjection("Events"), measureProjection("Late-Arriving Event %")],
       }],
-      ["event_line", "lineChart", "Event volume and late arrivals", [790, 425, 470, 265], {
+      ["event_line", "lineChart", "Valid event volume by event date", [790, 465, 470, 225], {
         Category: [columnProjection("dim_date", "calendar_date")],
-        Y: [measureProjection("Events"), measureProjection("Late-Arriving Events")],
+        Y: [measureProjection("Events")],
+        Tooltips: [measureProjection("Late-Arriving Events"), measureProjection("Late-Arriving Event %")],
       }],
     ],
   },
   {
     name: "Data Quality Exceptions",
+    title: "Data Quality & Exceptions",
+    subtitle: "Quarantine outcomes, quality-rule impact, and source-file observability",
     visuals: [
       ["quarantine_card", "cardVisual", "Quarantined Records", [20, 20, 290, 105], { Data: [measureProjection("Quarantined Records")] }],
       ["quality_card", "cardVisual", "First-Pass Quality %", [330, 20, 290, 105], { Data: [measureProjection("First-Pass Quality %")] }],
-      ["files_card", "cardVisual", "Affected Source Files", [640, 20, 290, 105], { Data: [measureProjection("Affected Source Files")] }],
+      ["files_card", "cardVisual", "Rule-File Impacts", [640, 20, 290, 105], { Data: [measureProjection("Rule-File Impacts")] }],
       ["late_events_card", "cardVisual", "Late-Arriving Events", [950, 20, 310, 105], { Data: [measureProjection("Late-Arriving Events")] }],
-      ["rule_bar", "clusteredBarChart", "Failed records by quality rule", [20, 145, 600, 260], {
+      ["rule_bar", "clusteredBarChart", "Failed records by quality rule", [20, 145, 760, 300], {
         Category: [columnProjection("fact_data_quality", "rule_code")],
         Y: [measureProjection("Quarantined Records")],
-        Tooltips: [measureProjection("Affected Source Files")],
+        Tooltips: [measureProjection("Rule-File Impacts")],
       }],
-      ["entity_donut", "donutChart", "Failures by entity", [640, 145, 300, 260], {
+      ["entity_donut", "donutChart", "Failures by entity", [800, 145, 300, 300], {
         Category: [columnProjection("fact_data_quality", "record_type")],
         Y: [measureProjection("Quarantined Records")],
       }],
-      ["entity_slicer", "listSlicer", "Entity Type", [960, 145, 300, 260], {
+      ["entity_slicer", "listSlicer", "Entity Type", [1120, 145, 140, 300], {
         Values: [columnProjection("fact_data_quality", "record_type")],
       }],
-      ["dq_matrix", "pivotTable", "Rule and source-file impact", [20, 425, 1240, 265], {
+      ["dq_matrix", "pivotTable", "Rule and source-file impact", [20, 465, 1240, 225], {
         Rows: [columnProjection("fact_data_quality", "record_type"), columnProjection("fact_data_quality", "rule_code")],
-        Values: [measureProjection("Quarantined Records"), measureProjection("Affected Source Files")],
+        Values: [measureProjection("Quarantined Records"), measureProjection("Rule-File Impacts")],
       }],
     ],
   },
@@ -506,6 +699,7 @@ write(
 );
 
 let tabOrder = 1000;
+const contentOffsetY = 112;
 for (const page of pages) {
   const id = pageId(page.name);
   write(
@@ -516,21 +710,74 @@ for (const page of pages) {
       name: id,
       displayName: page.name,
       displayOption: "FitToPage",
-      height: 720,
+      height: 820,
       width: 1280,
+      objects: {
+        background: [
+          {
+            properties: {
+              color: solidColor(colors.canvas),
+              transparency: literal(0, "number"),
+            },
+          },
+        ],
+      },
     },
   );
-  for (const [name, type, title, [x, y, width, height], roles] of page.visuals) {
+  const headerVisuals = [
+    makeShape(
+      page.name,
+      "header_background",
+      { x: 0, y: 0, width: 1280, height: 108, tabOrder: 0 },
+      colors.header,
+      colors.border,
+    ),
+    makeShape(
+      page.name,
+      "header_shade",
+      { x: 0, y: 82, width: 1280, height: 26, tabOrder: 100 },
+      colors.headerShade,
+      colors.headerShade,
+    ),
+    makeTextbox(
+      page.name,
+      "page_title",
+      { x: 10, y: 4, width: 1100, height: 54, tabOrder: 200 },
+      page.title,
+      32,
+      colors.ink,
+    ),
+    makeTextbox(
+      page.name,
+      "page_subtitle",
+      { x: 10, y: 56, width: 1240, height: 30, tabOrder: 300 },
+      page.subtitle,
+      15,
+      colors.mutedInk,
+    ),
+  ];
+  for (const visual of headerVisuals) {
+    write(
+      path.join(reportDefinition, "pages", id, "visuals", visual.name, "visual.json"),
+      visual,
+    );
+  }
+  let cardIndex = 0;
+  for (const [name, type, title, [x, y, width, height], roles, objects] of page.visuals) {
+    const cardBackground =
+      type === "cardVisual" && cardIndex++ % 2 === 0 ? colors.cardAlt : colors.cardBase;
     const visual = makeVisual(
       page.name,
       name,
       type,
       title,
-      { x, y, width, height, tabOrder },
+      { x, y: y + contentOffsetY, width, height, tabOrder },
       Object.fromEntries(
         Object.entries(roles).map(([role, projections]) => [role, { projections }]),
       ),
       title,
+      objects,
+      cardBackground,
     );
     write(
       path.join(reportDefinition, "pages", id, "visuals", visual.name, "visual.json"),

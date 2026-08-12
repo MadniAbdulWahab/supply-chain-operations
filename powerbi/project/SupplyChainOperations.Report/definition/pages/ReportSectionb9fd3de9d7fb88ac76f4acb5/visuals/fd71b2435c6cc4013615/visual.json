@@ -3,9 +3,9 @@
   "name": "fd71b2435c6cc4013615",
   "position": {
     "x": 20,
-    "y": 145,
-    "width": 600,
-    "height": 260,
+    "y": 257,
+    "width": 760,
+    "height": 300,
     "tabOrder": 22000,
     "z": 22000
   },
@@ -59,11 +59,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Affected Source Files"
+                  "Property": "Rule-File Impacts"
                 }
               },
-              "queryRef": "_Measures.Affected Source Files",
-              "nativeQueryRef": "Affected Source Files"
+              "queryRef": "_Measures.Rule-File Impacts",
+              "nativeQueryRef": "Rule-File Impacts"
             }
           ]
         }
@@ -100,6 +100,17 @@
                   "Value": "true"
                 }
               }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#242424'"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -111,6 +122,122 @@
               "expr": {
                 "Literal": {
                   "Value": "'Failed records by quality rule'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#A6A6A6'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

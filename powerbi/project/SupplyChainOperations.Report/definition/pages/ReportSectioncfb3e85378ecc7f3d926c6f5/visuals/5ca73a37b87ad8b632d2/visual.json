@@ -3,7 +3,7 @@
   "name": "5ca73a37b87ad8b632d2",
   "position": {
     "x": 20,
-    "y": 145,
+    "y": 257,
     "width": 780,
     "height": 260,
     "tabOrder": 6000,
@@ -46,7 +46,11 @@
               },
               "queryRef": "_Measures.On-Time Delivery %",
               "nativeQueryRef": "On-Time Delivery %"
-            },
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
             {
               "field": {
                 "Measure": {
@@ -60,6 +64,20 @@
               },
               "queryRef": "_Measures.Shipments",
               "nativeQueryRef": "Shipments"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Late Shipments"
+                }
+              },
+              "queryRef": "_Measures.Late Shipments",
+              "nativeQueryRef": "Late Shipments"
             }
           ]
         }
@@ -79,7 +97,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Created-date delivery performance'"
+                  "Value": "'On-time delivery trend by created date'"
                 }
               }
             },
@@ -96,6 +114,17 @@
                   "Value": "true"
                 }
               }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#242424'"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -106,7 +135,123 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Created-date delivery performance'"
+                  "Value": "'On-time delivery trend by created date'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#A6A6A6'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

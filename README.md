@@ -85,18 +85,15 @@ The generated data is intentionally excluded from Git. For a quicker development
 ## Power BI
 
 The report source is stored as a Power BI Project (`.pbip`) with a TMDL semantic model. After
-the gold tables have been generated, I create a local copy with absolute Parquet paths:
+the gold tables have been generated, I rebuild and open the local copy with:
 
 ```powershell
-$goldDataRoot = (Resolve-Path data/gold).Path
-node scripts/build_powerbi_project.mjs --output powerbi/.runtime `
-  --project-name SupplyChainOperationsLocal --data-root $goldDataRoot
+.\scripts\open_powerbi.ps1
 ```
 
-The file to open in Power BI Desktop is
-`powerbi/.runtime/SupplyChainOperationsLocal.pbip`. The portable project under
-`powerbi/project/` keeps a data-root parameter for source control and is not the local runtime
-file.
+The script opens `powerbi/.runtime/SupplyChainOperationsLocal.pbip`. The portable project
+under `powerbi/project/` uses typed empty tables until its data-root parameter is configured;
+it is intended for source control and inspection, not local data refresh.
 
 The report has three pages:
 
@@ -104,8 +101,23 @@ The report has three pages:
 2. Hub Route Performance
 3. Data Quality Exceptions
 
-Desktop refresh and final screenshot review are still pending. I have not described the
-report as validated until that review is complete.
+The local model has refreshed successfully in Power BI Desktop and its headline totals have
+been reconciled to DuckDB. I also completed the desktop layout review and saved the final
+report canvases without Power BI account or connection details.
+
+### Report pages
+
+#### Executive Overview
+
+![Executive Overview](docs/images/executive-overview.png)
+
+#### Hub & Route Performance
+
+![Hub and Route Performance](docs/images/hub-route-performance.png)
+
+#### Data Quality & Exceptions
+
+![Data Quality and Exceptions](docs/images/data-quality-exceptions.png)
 
 ## Repository layout
 
@@ -123,7 +135,6 @@ More detail is available in the [architecture](docs/architecture.md),
 ## Current limitations
 
 - Fabric notebooks and the Data Factory pipeline have not been executed in a Fabric workspace.
-- The Power BI report still needs a successful Desktop refresh and visual review.
 - GitHub Actions will be verified after the first push.
 - The local pipeline rebuilds silver and gold from the current bronze snapshot instead of
   incrementally merging every downstream table.

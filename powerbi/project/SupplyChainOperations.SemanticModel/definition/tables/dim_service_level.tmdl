@@ -37,6 +37,6 @@ table dim_service_level
 		mode: import
 		source =
 			let
-				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_service_level.parquet"))
+				Source = if #"pDataRoot" = "__DATA_ROOT__" then #table(type table [service_level_key = Int64.Type, service_level_id = type text, service_level_name = type text, sla_days = Int64.Type, base_price_eur = type number], {}) else Parquet.Document(File.Contents(#"pDataRoot" & "\dim_service_level.parquet"))
 			in
 				Source

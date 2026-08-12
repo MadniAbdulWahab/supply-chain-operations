@@ -3,6 +3,32 @@
   "name": "ReportSectionb9fd3de9d7fb88ac76f4acb5",
   "displayName": "Data Quality Exceptions",
   "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
+  "height": 820,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#FFFFFF'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
 }

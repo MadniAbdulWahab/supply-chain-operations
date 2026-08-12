@@ -10,24 +10,26 @@ in `measures.dax` for easier review.
 
 ## Local Desktop build
 
-After running the local pipeline, build a Desktop-specific copy with absolute data paths:
+After running the local pipeline, use the launcher from the repository root:
 
 ```powershell
-$goldDataRoot = (Resolve-Path data/gold).Path
-node scripts/build_powerbi_project.mjs --output powerbi/.runtime `
-  --project-name SupplyChainOperationsLocal --data-root $goldDataRoot
+.\scripts\open_powerbi.ps1
 ```
 
-Open `powerbi/.runtime/SupplyChainOperationsLocal.pbip`. The `.runtime` directory is ignored
-because it contains machine-specific paths.
+The script rebuilds and opens `powerbi/.runtime/SupplyChainOperationsLocal.pbip`. The
+`.runtime` directory is ignored because it contains machine-specific paths.
 
-The project under `powerbi/project/` is the portable source version. Its `pDataRoot` parameter
-must be replaced or regenerated before it can load local Parquet files.
+The project under `powerbi/project/` is the portable source version. It returns typed empty
+tables while `pDataRoot` has its default `__DATA_ROOT__` value, allowing reviewers to inspect
+the report and semantic-model source without receiving invalid-path errors. It is not the file
+used for local data refresh.
 
 Binary `.pbix` and `.pbit` files are excluded because they can contain cached data and local
 connection details.
 
 ## Status
 
-The PBIP/PBIR structure passes local report-author validation. A successful Desktop refresh,
-measure reconciliation, and final visual review are still outstanding.
+The PBIP/PBIR structure passes local report-author validation. The local model refreshed in
+Power BI Desktop and the headline measures were reconciled to DuckDB. All three pages passed
+the desktop layout review, and privacy-safe report-canvas screenshots are stored in
+`docs/images/`.

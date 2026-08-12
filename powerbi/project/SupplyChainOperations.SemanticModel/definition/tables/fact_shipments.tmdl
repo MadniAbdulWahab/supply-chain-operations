@@ -133,6 +133,6 @@ table fact_shipments
 		mode: import
 		source =
 			let
-				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\fact_shipments.parquet"))
+				Source = if #"pDataRoot" = "__DATA_ROOT__" then #table(type table [shipment_id = type text, created_date_key = Int64.Type, promised_date_key = Int64.Type, delivered_date_key = Int64.Type, origin_hub_key = Int64.Type, destination_hub_key = Int64.Type, route_key = Int64.Type, service_level_key = Int64.Type, customer_region = type text, weight_kg = type number, created_ts = type datetime, promised_delivery_ts = type datetime, actual_delivery_ts = type datetime, transit_hours = type number, delay_minutes = Int64.Type, is_on_time = type logical, current_status = type text, valid_event_count = Int64.Type, late_arriving_event_count = Int64.Type], {}) else Parquet.Document(File.Contents(#"pDataRoot" & "\fact_shipments.parquet"))
 			in
 				Source

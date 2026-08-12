@@ -3,6 +3,32 @@
   "name": "ReportSectioncfb3e85378ecc7f3d926c6f5",
   "displayName": "Executive Overview",
   "displayOption": "FitToPage",
-  "height": 720,
-  "width": 1280
+  "height": 820,
+  "width": 1280,
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'#FFFFFF'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
 }

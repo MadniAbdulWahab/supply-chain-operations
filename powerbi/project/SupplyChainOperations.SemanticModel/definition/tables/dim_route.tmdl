@@ -42,6 +42,6 @@ table dim_route
 		mode: import
 		source =
 			let
-				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_route.parquet"))
+				Source = if #"pDataRoot" = "__DATA_ROOT__" then #table(type table [route_key = Int64.Type, route_id = type text, origin_hub_id = type text, destination_hub_id = type text, distance_km = Int64.Type, route_label = type text], {}) else Parquet.Document(File.Contents(#"pDataRoot" & "\dim_route.parquet"))
 			in
 				Source

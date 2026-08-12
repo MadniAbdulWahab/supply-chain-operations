@@ -3,9 +3,9 @@
   "name": "3740b5f375be495475cc",
   "position": {
     "x": 790,
-    "y": 425,
+    "y": 577,
     "width": 470,
-    "height": 265,
+    "height": 225,
     "tabOrder": 17000,
     "z": 17000
   },
@@ -46,7 +46,11 @@
               },
               "queryRef": "_Measures.Events",
               "nativeQueryRef": "Events"
-            },
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
             {
               "field": {
                 "Measure": {
@@ -60,6 +64,20 @@
               },
               "queryRef": "_Measures.Late-Arriving Events",
               "nativeQueryRef": "Late-Arriving Events"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Late-Arriving Event %"
+                }
+              },
+              "queryRef": "_Measures.Late-Arriving Event %",
+              "nativeQueryRef": "Late-Arriving Event %"
             }
           ]
         }
@@ -79,7 +97,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Event volume and late arrivals'"
+                  "Value": "'Valid event volume by event date'"
                 }
               }
             },
@@ -96,6 +114,17 @@
                   "Value": "true"
                 }
               }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#242424'"
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -106,7 +135,123 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Event volume and late arrivals'"
+                  "Value": "'Valid event volume by event date'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#A6A6A6'"
+                    }
+                  }
+                }
+              }
+            },
+            "width": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "padding": [
+        {
+          "properties": {
+            "top": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "bottom": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "left": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            },
+            "right": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "visualHeader": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

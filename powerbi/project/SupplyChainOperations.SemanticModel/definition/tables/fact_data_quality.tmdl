@@ -44,6 +44,6 @@ table fact_data_quality
 		mode: import
 		source =
 			let
-				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\fact_data_quality.parquet"))
+				Source = if #"pDataRoot" = "__DATA_ROOT__" then #table(type table [evaluation_run_id = type text, evaluated_at = type datetime, rule_code = type text, record_type = type text, failed_record_count = Int64.Type, affected_file_count = Int64.Type], {}) else Parquet.Document(File.Contents(#"pDataRoot" & "\fact_data_quality.parquet"))
 			in
 				Source

@@ -70,6 +70,6 @@ table fact_events
 		mode: import
 		source =
 			let
-				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\fact_events.parquet"))
+				Source = if #"pDataRoot" = "__DATA_ROOT__" then #table(type table [event_id = type text, shipment_id = type text, event_date_key = Int64.Type, hub_key = Int64.Type, event_sequence = Int64.Type, event_type = type text, event_ts = type datetime, arrival_batch_date = type datetime, arrival_lag_days = Int64.Type, is_late_arriving = type logical], {}) else Parquet.Document(File.Contents(#"pDataRoot" & "\fact_events.parquet"))
 			in
 				Source

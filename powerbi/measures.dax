@@ -37,6 +37,5 @@ DIVIDE ( [Late-Arriving Events], COUNTROWS ( fact_events ) )
 Quarantined Records :=
 SUM ( fact_data_quality[failed_record_count] )
 
-Affected Source Files :=
+Rule-File Impacts :=
 SUM ( fact_data_quality[affected_file_count] )
-

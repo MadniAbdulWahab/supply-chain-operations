@@ -1,6 +1,6 @@
 # Local verification
 
-Last updated: 2026-08-12 (Europe/Berlin).
+Last updated: 2026-08-13 (Europe/Berlin).
 
 ## Full dataset run
 
@@ -44,5 +44,10 @@ same-path batch reprocessing. End-to-end pipeline tests also execute
 
 - GitHub Actions has not run because the repository has not been pushed yet.
 - Fabric items have not been created or executed.
-- The Power BI source project has been generated, but Desktop refresh and visual review are
-  still pending.
+- The Power BI local model refreshed successfully. Shipments, deliveries, on-time rate,
+  positive-delay average, P90 transit, exception shipments, events, late arrivals, and
+  quarantine totals reconciled to DuckDB.
+- The three report pages passed the final desktop visual review. Privacy-safe report-canvas
+  screenshots are stored under `docs/images/`.
+- `powerbi-report-author validate powerbi/project/SupplyChainOperations.Report` completed
+  with zero errors and zero warnings.

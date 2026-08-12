@@ -48,8 +48,8 @@ table _Measures
 	measure 'Quarantined Records' = SUM(fact_data_quality[failed_record_count])
 		formatString: #,##0
 
-	/// Sum of affected file counts across failed rules
-	measure 'Affected Source Files' = SUM(fact_data_quality[affected_file_count])
+	/// Sum of rule and source-file combinations affected by quality failures
+	measure 'Rule-File Impacts' = SUM(fact_data_quality[affected_file_count])
 		formatString: #,##0
 
 	/// Valid rows as a share of valid plus quarantined rows

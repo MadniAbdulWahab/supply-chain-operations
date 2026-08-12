@@ -7,38 +7,35 @@ what needs attention now?
 
 - KPI cards: Shipments, Delivered Shipments, On-Time Delivery %, Average Delay Hours, P90
   Transit Hours.
-- Weekly on-time trend with explicit create-date context.
-- Shipment volume and on-time rate by service level.
-- Top five routes by late shipment count, with a minimum-volume guard.
-- Slicers: date, service, customer region; a visible reset-filters control.
+- Created-date on-time delivery trend.
+- On-time delivery rate by service level.
+- Late shipment count by route.
+- Slicers for service level and customer region.
 
 ## 2. Hub / Route Performance
 
 Audience: network managers. Answer: Which parts of the network drive misses?
 
-- Route matrix: origin, destination, shipments, on-time %, delay hours, P90 transit.
-- Hub comparison with volume and late-arriving event rate.
-- Trend for the selected route/hub.
-- Drill-through shipment detail using synthetic IDs only.
-- Tooltip states denominator and active date role.
+- Route matrix with shipments, on-time %, delay hours, P90 transit, and late shipments.
+- Late-arriving event count by hub.
+- Valid event volume by event date.
+- Route dropdown that filters the page.
 
 ## 3. Data Quality / Exceptions
 
 Audience: data platform and operations analysts. Answer: Can the report be trusted, and where
 should investigation start?
 
-- Quarantined Records, affected source files, and late-arriving event rate cards.
+- Quarantined Records, First-Pass Quality %, Rule-File Impacts, and Late-Arriving Events cards.
 - Failed rows by rule and entity.
-- Run-to-run trend by evaluation time.
 - Source-file/rule matrix for triage.
-- Redacted synthetic record detail; no raw JSON in executive views.
+- Entity-type slicer for event and shipment failures.
 
 ## Visual review checklist
 
-- Use consistent colors: neutral blue for volume, green for on-time, amber for latency, red for
-  failed quality rules. Color is never the only signal.
+- Use a consistent blue data palette, alternating neutral KPI fills, gray title bands, and
+  square borders to match the visual style used across my portfolio.
 - All visuals have concise titles, alt text, keyboard focus order, and readable contrast.
-- Empty selections display explanatory text rather than a misleading zero.
-- Cross-highlighting and drill-through are tested on every page.
-- Mobile layout is reviewed after desktop totals reconcile to SQL.
-- Final screenshots must not include workspace or tenant details.
+- Slicer controls and chart scrolling remain usable at the fitted desktop size.
+- Final screenshots contain only the report canvas and no account, workspace, tenant, or
+  connection details.

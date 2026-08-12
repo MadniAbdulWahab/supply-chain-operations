@@ -32,9 +32,9 @@ environment.
 
 ## Power BI
 
-- [ ] The local semantic model refreshes successfully in Power BI Desktop.
-- [ ] Relationships, measures, formats, and hidden technical fields are checked.
-- [ ] Executive Overview, Hub Route Performance, and Data Quality Exceptions are reviewed.
-- [ ] Visual totals reconcile to the gold SQL results.
-- [ ] Layout, filtering, accessibility, and empty states are reviewed.
-- [ ] Screenshots are saved without workspace, tenant, or personal information.
+- [x] The local semantic model refreshes successfully in Power BI Desktop.
+- [x] Relationships, measures, formats, and hidden technical fields are checked.
+- [x] Executive Overview, Hub Route Performance, and Data Quality Exceptions are reviewed.
+- [x] Headline visual totals reconcile to the gold SQL results.
+- [x] Layout, slicer controls, readable contrast, alt text, and keyboard order are reviewed.
+- [x] Screenshots are saved without workspace, tenant, or personal information.

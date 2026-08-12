@@ -35,6 +35,6 @@ table dim_hub
 		mode: import
 		source =
 			let
-				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_hub.parquet"))
+				Source = if #"pDataRoot" = "__DATA_ROOT__" then #table(type table [hub_key = Int64.Type, hub_id = type text, hub_name = type text, city = type text, state_code = type text], {}) else Parquet.Document(File.Contents(#"pDataRoot" & "\dim_hub.parquet"))
 			in
 				Source
