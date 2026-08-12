@@ -1,0 +1,42 @@
+table dim_service_level
+
+	/// service level key
+	column service_level_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: service_level_key
+
+	/// service level id
+	column service_level_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: service_level_id
+
+	/// service level name
+	column service_level_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: service_level_name
+
+	/// sla days
+	column sla_days
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: sla_days
+
+	/// base price eur
+	column base_price_eur
+		dataType: double
+		formatString: €#,##0.00
+		summarizeBy: none
+		sourceColumn: base_price_eur
+
+	partition dim_service_level = m
+		mode: import
+		source =
+			let
+				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_service_level.parquet"))
+			in
+				Source

@@ -1,0 +1,132 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "74062a81c434c02ed370",
+  "position": {
+    "x": 20,
+    "y": 425,
+    "width": 1240,
+    "height": 265,
+    "tabOrder": 25000,
+    "z": 25000
+  },
+  "visual": {
+    "visualType": "pivotTable",
+    "query": {
+      "queryState": {
+        "Rows": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_data_quality"
+                    }
+                  },
+                  "Property": "record_type"
+                }
+              },
+              "queryRef": "fact_data_quality.record_type",
+              "nativeQueryRef": "record_type"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_data_quality"
+                    }
+                  },
+                  "Property": "rule_code"
+                }
+              },
+              "queryRef": "fact_data_quality.rule_code",
+              "nativeQueryRef": "rule_code"
+            }
+          ]
+        },
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Quarantined Records"
+                }
+              },
+              "queryRef": "_Measures.Quarantined Records",
+              "nativeQueryRef": "Quarantined Records"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Affected Source Files"
+                }
+              },
+              "queryRef": "_Measures.Affected Source Files",
+              "nativeQueryRef": "Affected Source Files"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rule and source-file impact'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rule and source-file impact'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

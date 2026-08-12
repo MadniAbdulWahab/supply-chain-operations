@@ -1,0 +1,75 @@
+table fact_events
+
+	/// event id
+	column event_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: event_id
+
+	/// shipment id
+	column shipment_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: shipment_id
+
+	/// event date key
+	column event_date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: event_date_key
+
+	/// hub key
+	column hub_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: hub_key
+
+	/// event sequence
+	column event_sequence
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: event_sequence
+
+	/// event type
+	column event_type
+		dataType: string
+		summarizeBy: none
+		sourceColumn: event_type
+
+	/// event ts
+	column event_ts
+		dataType: dateTime
+		formatString: yyyy-mm-dd HH:mm
+		summarizeBy: none
+		sourceColumn: event_ts
+
+	/// arrival batch date
+	column arrival_batch_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: arrival_batch_date
+
+	/// arrival lag days
+	column arrival_lag_days
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: arrival_lag_days
+
+	/// is late arriving
+	column is_late_arriving
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_late_arriving
+
+	partition fact_events = m
+		mode: import
+		source =
+			let
+				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\fact_events.parquet"))
+			in
+				Source

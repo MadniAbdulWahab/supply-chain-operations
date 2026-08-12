@@ -1,0 +1,122 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "fd71b2435c6cc4013615",
+  "position": {
+    "x": 20,
+    "y": 145,
+    "width": 600,
+    "height": 260,
+    "tabOrder": 22000,
+    "z": 22000
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "fact_data_quality"
+                    }
+                  },
+                  "Property": "rule_code"
+                }
+              },
+              "queryRef": "fact_data_quality.rule_code",
+              "nativeQueryRef": "rule_code"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Quarantined Records"
+                }
+              },
+              "queryRef": "_Measures.Quarantined Records",
+              "nativeQueryRef": "Quarantined Records"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "_Measures"
+                    }
+                  },
+                  "Property": "Affected Source Files"
+                }
+              },
+              "queryRef": "_Measures.Affected Source Files",
+              "nativeQueryRef": "Affected Source Files"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Failed records by quality rule'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "general": [
+        {
+          "properties": {
+            "altText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Failed records by quality rule'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

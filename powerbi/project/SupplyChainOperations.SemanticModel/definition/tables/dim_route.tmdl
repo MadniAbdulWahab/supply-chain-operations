@@ -1,0 +1,47 @@
+table dim_route
+
+	/// route key
+	column route_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: route_key
+
+	/// route id
+	column route_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: route_id
+
+	/// origin hub id
+	column origin_hub_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: origin_hub_id
+
+	/// destination hub id
+	column destination_hub_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: destination_hub_id
+
+	/// distance km
+	column distance_km
+		dataType: int64
+		formatString: #,##0
+		summarizeBy: none
+		sourceColumn: distance_km
+
+	/// route label
+	column route_label
+		dataType: string
+		summarizeBy: none
+		sourceColumn: route_label
+
+	partition dim_route = m
+		mode: import
+		source =
+			let
+				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_route.parquet"))
+			in
+				Source

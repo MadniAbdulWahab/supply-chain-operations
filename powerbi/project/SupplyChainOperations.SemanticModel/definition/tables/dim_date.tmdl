@@ -1,0 +1,78 @@
+table dim_date
+	dataCategory: Time
+
+	/// date key
+	column date_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: date_key
+
+	/// calendar date
+	column calendar_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		summarizeBy: none
+		sourceColumn: calendar_date
+
+	/// calendar year
+	column calendar_year
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: calendar_year
+
+	/// calendar quarter
+	column calendar_quarter
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: calendar_quarter
+
+	/// calendar month
+	column calendar_month
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: calendar_month
+
+	/// month name
+	column month_name
+		dataType: string
+		summarizeBy: none
+		sortByColumn: calendar_month
+		sourceColumn: month_name
+
+	/// iso week
+	column iso_week
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: iso_week
+
+	/// day of week
+	column day_of_week
+		dataType: int64
+		formatString: 0
+		summarizeBy: none
+		sourceColumn: day_of_week
+
+	/// day name
+	column day_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: day_name
+
+	/// is weekend
+	column is_weekend
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: is_weekend
+
+	partition dim_date = m
+		mode: import
+		source =
+			let
+				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_date.parquet"))
+			in
+				Source

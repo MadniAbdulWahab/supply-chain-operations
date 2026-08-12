@@ -1,0 +1,37 @@
+{
+  "artifactType": "DESIGN_SPEC_NOT_DEPLOYABLE_EXPORT",
+  "verifiedInFabric": false,
+  "name": "pl_supply_chain_daily",
+  "parameters": {
+    "run_id": "string",
+    "source_root": "string",
+    "allow_path_reprocess": "boolean"
+  },
+  "activities": [
+    {
+      "name": "ForEachSourceFile",
+      "type": "ForEach",
+      "child": "01_ingest_bronze",
+      "onFailure": "StopAndRecordFailure"
+    },
+    {
+      "name": "BuildSilver",
+      "type": "Notebook",
+      "dependsOn": ["ForEachSourceFile"],
+      "notebook": "02_build_silver"
+    },
+    {
+      "name": "BuildGold",
+      "type": "Notebook",
+      "dependsOn": ["BuildSilver"],
+      "notebook": "03_build_gold"
+    },
+    {
+      "name": "RunSqlAssertions",
+      "type": "ScriptOrStoredProcedure",
+      "dependsOn": ["BuildGold"],
+      "note": "Choose a supported endpoint activity only after workspace validation"
+    }
+  ]
+}
+

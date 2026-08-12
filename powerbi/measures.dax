@@ -1,0 +1,42 @@
+-- DESIGN ONLY: create, format, and reconcile these measures in the real semantic model.
+
+Shipments :=
+DISTINCTCOUNT ( fact_shipments[shipment_id] )
+
+Delivered Shipments :=
+CALCULATE ( [Shipments], NOT ISBLANK ( fact_shipments[actual_delivery_ts] ) )
+
+On-Time Deliveries :=
+CALCULATE ( [Delivered Shipments], fact_shipments[is_on_time] = TRUE () )
+
+On-Time Delivery % :=
+DIVIDE ( [On-Time Deliveries], [Delivered Shipments] )
+
+Average Delay Hours :=
+DIVIDE (
+    AVERAGEX (
+        FILTER ( fact_shipments, fact_shipments[delay_minutes] > 0 ),
+        fact_shipments[delay_minutes]
+    ),
+    60
+)
+
+P90 Transit Hours :=
+PERCENTILEX.INC (
+    FILTER ( fact_shipments, NOT ISBLANK ( fact_shipments[actual_delivery_ts] ) ),
+    fact_shipments[transit_hours],
+    0.9
+)
+
+Late-Arriving Events :=
+CALCULATE ( COUNTROWS ( fact_events ), fact_events[is_late_arriving] = TRUE () )
+
+Late-Arriving Event % :=
+DIVIDE ( [Late-Arriving Events], COUNTROWS ( fact_events ) )
+
+Quarantined Records :=
+SUM ( fact_data_quality[failed_record_count] )
+
+Affected Source Files :=
+SUM ( fact_data_quality[affected_file_count] )
+

@@ -1,0 +1,27 @@
+{
+  "status": "pending_desktop_validation",
+  "factTables": {
+    "fact_shipments": "one row per valid shipment",
+    "fact_events": "one row per valid deduplicated event",
+    "fact_data_quality": "one row per evaluation run, rule, and entity"
+  },
+  "dimensions": ["dim_date", "dim_hub", "dim_route", "dim_service_level"],
+  "relationships": [
+    {"from": "fact_shipments.created_date_key", "to": "dim_date.date_key", "active": true, "cardinality": "many-to-one"},
+    {"from": "fact_shipments.promised_date_key", "to": "dim_date.date_key", "active": false, "cardinality": "many-to-one"},
+    {"from": "fact_shipments.delivered_date_key", "to": "dim_date.date_key", "active": false, "cardinality": "many-to-one"},
+    {"from": "fact_events.event_date_key", "to": "dim_date.date_key", "active": true, "cardinality": "many-to-one"},
+    {"from": "fact_shipments.route_key", "to": "dim_route.route_key", "active": true, "cardinality": "many-to-one"},
+    {"from": "fact_shipments.service_level_key", "to": "dim_service_level.service_level_key", "active": true, "cardinality": "many-to-one"},
+    {"from": "fact_events.hub_key", "to": "dim_hub.hub_key", "active": true, "cardinality": "many-to-one"}
+  ],
+  "rolePlayingDimensions": {
+    "hubRoles": ["origin_hub", "destination_hub"],
+    "relationshipStrategy": "separate role-playing dimensions or inactive relationships"
+  },
+  "defaults": {
+    "crossFilterDirection": "single",
+    "hideTechnicalKeys": true,
+    "autoDateTime": false
+  }
+}

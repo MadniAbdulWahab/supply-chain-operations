@@ -1,0 +1,40 @@
+table dim_hub
+
+	/// hub key
+	column hub_key
+		dataType: int64
+		isHidden
+		summarizeBy: none
+		sourceColumn: hub_key
+
+	/// hub id
+	column hub_id
+		dataType: string
+		summarizeBy: none
+		sourceColumn: hub_id
+
+	/// hub name
+	column hub_name
+		dataType: string
+		summarizeBy: none
+		sourceColumn: hub_name
+
+	/// city
+	column city
+		dataType: string
+		summarizeBy: none
+		sourceColumn: city
+
+	/// state code
+	column state_code
+		dataType: string
+		summarizeBy: none
+		sourceColumn: state_code
+
+	partition dim_hub = m
+		mode: import
+		source =
+			let
+				Source = Parquet.Document(File.Contents(#"pDataRoot" & "\dim_hub.parquet"))
+			in
+				Source

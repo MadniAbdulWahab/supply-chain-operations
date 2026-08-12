@@ -1,0 +1,42 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local lakehouse outputs (generated, never commit)
+data/bronze/**
+data/silver/**
+data/gold/**
+data/state/**
+data/evidence/**
+!data/bronze/.gitkeep
+!data/silver/.gitkeep
+!data/gold/.gitkeep
+!data/state/.gitkeep
+!data/evidence/.gitkeep
+!data/evidence/README.md
+
+# Local configuration and secrets
+.env
+*.local.json
+*.token
+
+# Fabric / Power BI local binaries and caches
+*.pbix
+*.pbit
+*.abf
+.fabric/
+powerbi/.runtime/
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

@@ -1,0 +1,66 @@
+table _Measures
+
+	/// Distinct valid shipments in the active filter context
+	measure Shipments = DISTINCTCOUNT(fact_shipments[shipment_id])
+		formatString: #,##0
+
+	/// Valid shipments with a delivery timestamp
+	measure 'Delivered Shipments' = CALCULATE([Shipments], NOT ISBLANK(fact_shipments[actual_delivery_ts]))
+		formatString: #,##0
+
+	/// Delivered shipments that met the promise timestamp
+	measure 'On-Time Deliveries' = CALCULATE([Delivered Shipments], fact_shipments[is_on_time] = TRUE())
+		formatString: #,##0
+
+	/// Share of delivered shipments that met the promise timestamp
+	measure 'On-Time Delivery %' = DIVIDE([On-Time Deliveries], [Delivered Shipments])
+		formatString: 0.0%
+
+	/// Average positive delivery delay in hours
+	measure 'Average Delay Hours' = DIVIDE(AVERAGEX(FILTER(fact_shipments, fact_shipments[delay_minutes] > 0), fact_shipments[delay_minutes]), 60)
+		formatString: 0.0
+
+	/// Ninetieth percentile of delivered transit duration
+	measure 'P90 Transit Hours' = PERCENTILEX.INC(FILTER(fact_shipments, NOT ISBLANK(fact_shipments[actual_delivery_ts])), fact_shipments[transit_hours], 0.9)
+		formatString: 0.0
+
+	/// Delivered shipments that missed their promise
+	measure 'Late Shipments' = CALCULATE([Delivered Shipments], fact_shipments[is_on_time] = FALSE())
+		formatString: #,##0
+
+	/// Shipments whose latest valid event is not delivered
+	measure 'Exception Shipments' = CALCULATE([Shipments], fact_shipments[current_status] <> "DELIVERED")
+		formatString: #,##0
+
+	/// Valid deduplicated shipment events
+	measure Events = COUNTROWS(fact_events)
+		formatString: #,##0
+
+	/// Valid events arriving at least two days after business event date
+	measure 'Late-Arriving Events' = CALCULATE([Events], fact_events[is_late_arriving] = TRUE())
+		formatString: #,##0
+
+	/// Share of valid events arriving at least two days late
+	measure 'Late-Arriving Event %' = DIVIDE([Late-Arriving Events], [Events])
+		formatString: 0.00%
+
+	/// Rows rejected by current data-quality evaluation
+	measure 'Quarantined Records' = SUM(fact_data_quality[failed_record_count])
+		formatString: #,##0
+
+	/// Sum of affected file counts across failed rules
+	measure 'Affected Source Files' = SUM(fact_data_quality[affected_file_count])
+		formatString: #,##0
+
+	/// Valid rows as a share of valid plus quarantined rows
+	measure 'First-Pass Quality %' = 1 - DIVIDE([Quarantined Records], [Shipments] + [Events] + [Quarantined Records])
+		formatString: 0.00%
+
+	column Dummy
+		isHidden
+		summarizeBy: none
+		sourceColumn: [Dummy]
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW("Dummy", BLANK())

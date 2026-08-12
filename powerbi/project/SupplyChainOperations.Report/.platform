@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Supply Chain Operations",
+    "description": "Operations report for the Nordlicht Logistics synthetic dataset"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "11e0d32b-1060-28c1-723e-bbf2ee1ab02e"
+  }
+}

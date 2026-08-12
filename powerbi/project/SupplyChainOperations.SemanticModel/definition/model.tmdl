@@ -1,0 +1,14 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	discourageImplicitMeasures
+
+ref table dim_date
+ref table dim_hub
+ref table dim_route
+ref table dim_service_level
+ref table fact_shipments
+ref table fact_events
+ref table fact_data_quality
+ref table _Measures

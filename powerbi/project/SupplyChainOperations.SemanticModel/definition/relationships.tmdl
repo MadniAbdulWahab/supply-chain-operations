@@ -1,0 +1,29 @@
+relationship 'Shipments Created Date'
+	fromColumn: fact_shipments.created_date_key
+	toColumn: dim_date.date_key
+
+relationship 'Shipments Promised Date'
+	isActive: false
+	fromColumn: fact_shipments.promised_date_key
+	toColumn: dim_date.date_key
+
+relationship 'Shipments Delivered Date'
+	isActive: false
+	fromColumn: fact_shipments.delivered_date_key
+	toColumn: dim_date.date_key
+
+relationship 'Events Date'
+	fromColumn: fact_events.event_date_key
+	toColumn: dim_date.date_key
+
+relationship 'Events Hub'
+	fromColumn: fact_events.hub_key
+	toColumn: dim_hub.hub_key
+
+relationship 'Shipments Route'
+	fromColumn: fact_shipments.route_key
+	toColumn: dim_route.route_key
+
+relationship 'Shipments Service Level'
+	fromColumn: fact_shipments.service_level_key
+	toColumn: dim_service_level.service_level_key
