@@ -1,6 +1,7 @@
 {
   "artifactType": "DESIGN_SPEC_NOT_DEPLOYABLE_EXPORT",
-  "verifiedInFabric": false,
+  "verifiedInFabric": true,
+  "verifiedOn": "2026-10-12",
   "name": "pl_supply_chain_daily",
   "parameters": {},
   "activities": [

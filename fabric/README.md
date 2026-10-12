@@ -8,13 +8,12 @@ notebooks that write Delta tables, a pipeline specification, and a run book.
 | Environment | Status |
 |---|---|
 | Local Spark 3.5.3 + Delta Lake 3.2 container | Passed on 12 Oct 2026 with the full dataset (250,000 shipments, 1,250,100 event rows) |
-| Fabric workspace | Not yet run; follow [RUNBOOK.md](RUNBOOK.md) |
+| Fabric trial workspace (Spark 4.1 runtime) | Passed on 12 Oct 2026: two notebook runs and one Data Factory pipeline run |
 
-In the local rehearsal, both runs passed all 7 SQL assertions and all 40 reconciliation checks
-against the DuckDB results. The second run loaded no files and skipped all 39 unchanged inputs.
-The container mounts the source files at the same `/lakehouse/default/Files` path that Fabric
-uses, but it is not Fabric: OneLake, the SQL analytics endpoint, and the pipeline are only
-verified by a workspace run.
+In both environments, every run passed all 7 SQL assertions and all 40 reconciliation checks
+against the DuckDB results, and repeat runs loaded no files and skipped all 39 unchanged
+inputs. Details and screenshots are in
+[docs/fabric-verification.md](../docs/fabric-verification.md).
 
 ## Fabric items
 

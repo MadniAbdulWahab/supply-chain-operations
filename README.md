@@ -46,9 +46,10 @@ Gold dimensions and facts
 ```
 
 DuckDB and Parquet provide the local execution path. The `fabric/` directory contains a
-PySpark and Delta Lake version for a Fabric Lakehouse. In a local Spark 3.5 container it
-reproduces the DuckDB results on all 40 reconciliation checks and passes all 7 SQL
-assertions; it has not yet been run in a Fabric workspace.
+PySpark and Delta Lake version that runs in a Microsoft Fabric Lakehouse and is orchestrated
+by a Data Factory pipeline. In Fabric it reproduces the DuckDB results on all 40
+reconciliation checks and passes all 7 SQL assertions (see
+[Fabric verification](docs/fabric-verification.md)).
 
 ## Verified local run
 
@@ -120,6 +121,20 @@ report canvases without Power BI account or connection details.
 
 ![Data Quality and Exceptions](docs/images/data-quality-exceptions.png)
 
+## Microsoft Fabric
+
+The `fabric/` notebooks load the same Parquet files from OneLake into Delta tables, apply the
+same quality rules and dimensional model in Spark SQL, and then reconcile 40 checks with the
+DuckDB results. In the Fabric trial workspace, two notebook runs and one Data Factory pipeline
+run passed every check, and the repeat runs skipped all 39 unchanged files. The gold tables
+are queryable through the Lakehouse SQL analytics endpoint.
+
+![Fabric pipeline run](docs/images/fabric-pipeline-run.png)
+
+The [run book](fabric/RUNBOOK.md) lists the setup steps, and
+`scripts/test_fabric_notebooks.ps1` runs the same notebooks locally with Spark 3.5 and Delta
+Lake in Docker.
+
 ## Repository layout
 
 - `src/supply_chain_ops/` — generator, ingestion, quality processing, and orchestration
@@ -127,7 +142,7 @@ report canvases without Power BI account or connection details.
 - `tests/` — deterministic generation and end-to-end pipeline tests
 - `docs/` — architecture, data dictionary, quality rules, KPIs, and run evidence
 - `powerbi/` — report generator, semantic model, measures, and page definitions
-- `fabric/` — PySpark/Delta notebooks for Fabric, local Spark rehearsal, and run book
+- `fabric/` — PySpark/Delta notebooks, Fabric pipeline specification, local Spark rehearsal, and run book
 
 More detail is available in the [architecture](docs/architecture.md),
 [data dictionary](docs/data-dictionary.md), [quality rules](docs/quality-rules.md), and
@@ -135,8 +150,8 @@ More detail is available in the [architecture](docs/architecture.md),
 
 ## Current limitations
 
-- The Fabric notebooks have passed a local Spark and Delta rehearsal, but the notebooks and
-  the Data Factory pipeline have not yet been executed in a Fabric workspace.
+- The Fabric pipeline runs on demand in a trial workspace; no schedule, alerting, or Direct
+  Lake semantic model has been set up there.
 - GitHub Actions passes the local-lakehouse CI checks on `main`.
 - The local pipeline rebuilds silver and gold from the current bronze snapshot instead of
   incrementally merging every downstream table.
