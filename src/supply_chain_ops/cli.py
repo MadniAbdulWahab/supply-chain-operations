@@ -20,6 +20,8 @@ def _parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("run", help="run the local bronze-to-gold pipeline")
     subparsers.add_parser("status", help="show local dataset and pipeline status")
+    subparsers.add_parser("reference", help="export local results for Fabric reconciliation")
+    subparsers.add_parser("fabric-notebooks", help="build .ipynb files for Fabric import")
     return parser
 
 
@@ -53,6 +55,17 @@ def main(argv: list[str] | None = None) -> int:
             "evidence_exists": (paths.evidence / "latest_run.json").exists(),
         }
         print(json.dumps(status, indent=2))
+        return 0
+    if args.command == "reference":
+        from supply_chain_ops.reference import build_reference
+
+        reference = build_reference(paths)
+        print(json.dumps({"checks": len(reference["checks"])}, indent=2))
+        return 0
+    if args.command == "fabric-notebooks":
+        from supply_chain_ops.fabric_notebooks import write_notebooks
+
+        print(json.dumps([path.name for path in write_notebooks()], indent=2))
         return 0
     raise AssertionError(f"unhandled command: {args.command}")
 

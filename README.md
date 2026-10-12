@@ -45,9 +45,10 @@ Gold dimensions and facts
         +------> Power BI semantic model
 ```
 
-DuckDB and Parquet provide the local execution path. The `fabric/` directory contains the
-corresponding Fabric design, but those cloud artifacts have not yet been run in a Fabric
-workspace.
+DuckDB and Parquet provide the local execution path. The `fabric/` directory contains a
+PySpark and Delta Lake version for a Fabric Lakehouse. In a local Spark 3.5 container it
+reproduces the DuckDB results on all 40 reconciliation checks and passes all 7 SQL
+assertions; it has not yet been run in a Fabric workspace.
 
 ## Verified local run
 
@@ -126,7 +127,7 @@ report canvases without Power BI account or connection details.
 - `tests/` — deterministic generation and end-to-end pipeline tests
 - `docs/` — architecture, data dictionary, quality rules, KPIs, and run evidence
 - `powerbi/` — report generator, semantic model, measures, and page definitions
-- `fabric/` — Fabric migration design and draft notebook sources
+- `fabric/` — PySpark/Delta notebooks for Fabric, local Spark rehearsal, and run book
 
 More detail is available in the [architecture](docs/architecture.md),
 [data dictionary](docs/data-dictionary.md), [quality rules](docs/quality-rules.md), and
@@ -134,7 +135,8 @@ More detail is available in the [architecture](docs/architecture.md),
 
 ## Current limitations
 
-- Fabric notebooks and the Data Factory pipeline have not been executed in a Fabric workspace.
+- The Fabric notebooks have passed a local Spark and Delta rehearsal, but the notebooks and
+  the Data Factory pipeline have not yet been executed in a Fabric workspace.
 - GitHub Actions passes the local-lakehouse CI checks on `main`.
 - The local pipeline rebuilds silver and gold from the current bronze snapshot instead of
   incrementally merging every downstream table.

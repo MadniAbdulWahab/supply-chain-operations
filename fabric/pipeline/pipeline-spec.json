@@ -2,36 +2,38 @@
   "artifactType": "DESIGN_SPEC_NOT_DEPLOYABLE_EXPORT",
   "verifiedInFabric": false,
   "name": "pl_supply_chain_daily",
-  "parameters": {
-    "run_id": "string",
-    "source_root": "string",
-    "allow_path_reprocess": "boolean"
-  },
+  "parameters": {},
   "activities": [
     {
-      "name": "ForEachSourceFile",
-      "type": "ForEach",
-      "child": "01_ingest_bronze",
-      "onFailure": "StopAndRecordFailure"
+      "name": "IngestBronze",
+      "type": "Notebook",
+      "notebook": "01_ingest_bronze",
+      "baseParameters": {"run_id": "@pipeline().RunId"}
     },
     {
       "name": "BuildSilver",
       "type": "Notebook",
-      "dependsOn": ["ForEachSourceFile"],
-      "notebook": "02_build_silver"
+      "dependsOn": [{"activity": "IngestBronze", "condition": "Succeeded"}],
+      "notebook": "02_build_silver",
+      "baseParameters": {"run_id": "@pipeline().RunId"}
     },
     {
       "name": "BuildGold",
       "type": "Notebook",
-      "dependsOn": ["BuildSilver"],
-      "notebook": "03_build_gold"
+      "dependsOn": [{"activity": "BuildSilver", "condition": "Succeeded"}],
+      "notebook": "03_build_gold",
+      "baseParameters": {"run_id": "@pipeline().RunId"}
     },
     {
-      "name": "RunSqlAssertions",
-      "type": "ScriptOrStoredProcedure",
-      "dependsOn": ["BuildGold"],
-      "note": "Choose a supported endpoint activity only after workspace validation"
+      "name": "Validate",
+      "type": "Notebook",
+      "dependsOn": [{"activity": "BuildGold", "condition": "Succeeded"}],
+      "notebook": "04_validate",
+      "baseParameters": {"run_id": "@pipeline().RunId"}
     }
+  ],
+  "notes": [
+    "Notebook 01 loads all new or changed files in one activity, so no ForEach is needed.",
+    "Notebook 04 fails the pipeline when an assertion or reconciliation check fails."
   ]
 }
-
