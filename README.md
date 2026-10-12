@@ -137,12 +137,12 @@ Lake in Docker.
 
 ## Repository layout
 
-- `src/supply_chain_ops/` — generator, ingestion, quality processing, and orchestration
-- `sql/` — silver/gold transformations and SQL assertions
-- `tests/` — deterministic generation and end-to-end pipeline tests
-- `docs/` — architecture, data dictionary, quality rules, KPIs, and run evidence
-- `powerbi/` — report generator, semantic model, measures, and page definitions
-- `fabric/` — PySpark/Delta notebooks, Fabric pipeline specification, local Spark rehearsal, and run book
+- `src/supply_chain_ops/`: generator, ingestion, quality processing, and orchestration
+- `sql/`: silver/gold transformations and SQL assertions
+- `tests/`: deterministic generation and end-to-end pipeline tests
+- `docs/`: architecture, data dictionary, quality rules, KPIs, and run evidence
+- `powerbi/`: report generator, semantic model, measures, and page definitions
+- `fabric/`: PySpark/Delta notebooks, Fabric pipeline specification, local Spark rehearsal, and run book
 
 More detail is available in the [architecture](docs/architecture.md),
 [data dictionary](docs/data-dictionary.md), [quality rules](docs/quality-rules.md), and
